@@ -1,0 +1,49 @@
+{% load static %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{% get_providers as socialaccount_providers %}
+
+{% if user.is_authenticated %}
+
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static 'table.css' %}">
+    </head>
+    <body>
+        <div class="topnav">
+            <a class="active" href="/grade_search/">Student Search</a>
+            <a href="/logout">Logout</a>
+        </div>
+        <h1>Student Search</h1>
+        <form action="/grade_search/" method="post">{% csrf_token %}
+            <input type="text" name="term" size="30" value="{{term}}"> <input type="submit" value="Search">
+        </form>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Student Id</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in result %}
+                    <tr>
+                        <th><a href="/grade_search/student?id={{ student.student_id }}">{{ student.student_id }}</a></th>
+                        <th>{{ student.first_name }}</th>
+                        <th>{{ student.last_name }}</th>
+                        <th>{{ student.email }}</th>
+                        <th>{{ student.address }}</th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
+{% else %}
+    <meta http-equiv = "refresh" content = "0; url = http://127.0.0.1:8000/account/login/" />
+{% endif %}
